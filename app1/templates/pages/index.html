@@ -2,8 +2,8 @@
 {% load plotly_dash %}
 
 {% block content %}
-
-    <div class="{% plotly_class name='test_it' %} card" style="height: 100%; width: 100%">
+    <h1>Hourly</h1>
+    <div class="{% plotly_class name='graph_it' %} card" style="height: 100%; width: 100%">
     {% plotly_app name='test_it' ratio=1 %}
     </div>
 

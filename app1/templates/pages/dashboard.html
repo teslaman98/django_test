@@ -5,8 +5,20 @@
 {% block content %}
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 
-    <div class="{% plotly_class name='graph_it' %} card" style="height: 100%; width: 100%">
-    {% plotly_app name='graph_it' ratio=1 %}
+    <div class="card" style="height: 100%; width: 100%">
+        <div class="container">
+            <h1>Cash on Hand: {{ money }}$</h1>
+            <h1>Net Value: {{ net }}$ </h1>
+            <h1>BTC Price: {{ stocks }}$ </h1>
+        </div>
     </div>
+
+    <div class="card">
+        <div class="container">
+            <button type="button" onclick="{{ click }}">Click Me!</button>
+        </div>
+    </div>
+
+
 
 {% endblock %}

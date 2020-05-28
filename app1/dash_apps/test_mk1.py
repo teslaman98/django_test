@@ -9,26 +9,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from django_plotly_dash import DjangoDash
 from dash.dependencies import Output, Input
+from datetime import datetime
 
-data_list = [278.1151, 278.4599, 278.6231, 279.2025, 279.4700]
-time_list = [0, 1, 2, 3, 4]
-
-
-def STONKS_csv(symbol, interval):
-    API_key = "FGZ5VI2OU5B413FO"
-    url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=" + interval + "&outputsize=full&apikey=" + API_key + "&datatype=csv"
-    data_list = pd.read_csv(url)
+def STONKS_hourly():
+    API_key = '&api_key={500d53d1a64c23b76a0b6494d9e0126803f039a84af46cc868d987b4ae052a4c}'
+    link = 'https://min-api.cryptocompare.com/data/v2/histohour?fsym=BTC&tsym=USD&limit=10'
+    url = link + API_key
+    data_list = pd.read_json(url)
     # data_list.set_index('timestamp', inplace = True)
     return data_list
 
-"""
-tick = STONKS_csv('TSLA', '5min')
-ticker = tick['high']
+def STONKS_now():
+    API_key = '&api_key={500d53d1a64c23b76a0b6494d9e0126803f039a84af46cc868d987b4ae052a4c}'
+    link = "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD"
+    url = link + API_key
+    data_list = pd.read_json(url)
+    return data_now
 
-time = tick['timestamp']
-print (tick['high'])
-print (time)
-"""
+
 app = DjangoDash('test_it')  # replaces dash.Dash
 
 app.layout = html.Div([
@@ -42,7 +40,7 @@ app.layout = html.Div([
             figure={
 
                 'layout': {
-                    'title': 'Dash Data Visualization'
+                    'title': 'Hourly BTC Value'
                 }
             }
         )
@@ -59,9 +57,20 @@ def stock_value(csv, key):
               [dash.dependencies.Input("stock-input", "value")]
               )
 def update_fig(input_value):
-    tick = STONKS_csv(input_value, '5min')
-    ticker = tick['high']
-    time = tick['timestamp']
+    stock = STONKS_hourly()
+    second = stock['Data']
+    third = second['Data']
+    close = []
+    time_list = []
+    time_ref = []
+    for hour in third:
+        time_list.append(hour['time'])
+    for hour in third:
+        close.append(hour['close'])
+    for x in time_list:
+        time_ref.append(datetime.utcfromtimestamp(x).strftime('%Y-%m-%d %H:%M:%S'))
+    ticker = close
+    time = time_ref
     data = [{'x': time, 'y': ticker, 'type': 'line', 'name': 'SF'}]
     return {
         "data": data
